@@ -77,7 +77,7 @@ class Model(nn.Module):
             in_size = input_size if i == 0 else hidden_size
             layers.append(nn.Linear(in_size, hidden_size))
             layers.append(nn.BatchNorm1d(hidden_size))
-            layers.append(nn.ReLU(inplace=True))
+            layers.append(nn.LeakyReLU(inplace=True))
             layers.append(nn.Dropout(p=p))
         layers.append(nn.Linear(hidden_size, num_labels))
 
