@@ -10,7 +10,7 @@ out_path = "../outputs/real_regression_data"
 NUM_LABELS = 4
 HIDDEN_SIZE = 1024
 NUM_LAYERS = 6
-NUM_EPOCHS = 1000
+NUM_EPOCHS = 2500
 WD = 1e-7
 P = 0.6
 
@@ -23,24 +23,23 @@ label_map = {
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 # Get data
-train_x, train_y = get_data(
+orig_x, orig_y, orig_Y, min_v, max_v = get_data(
     data_path=data_path,
     out_path=out_path,
     name="real_train_truesorted",
     load_values=False,
     device=device,
     num_labels=NUM_LABELS,
-    return_extra=False,
-    drop_extra=2)
-test_x, test_y, test_Y, min_v, max_v = get_data(
-    data_path=data_path,
-    out_path=out_path,
-    name="real_test_truesorted",
-    load_values=True,
-    device=device,
-    num_labels=NUM_LABELS,
     return_extra=True,
     drop_extra=2)
+
+TRAIN_SIZE = int(orig_x.shape[0]*0.80)
+index = torch.randperm(orig_x.shape[0])
+train_x = orig_x[:TRAIN_SIZE]
+train_y = orig_y[:TRAIN_SIZE]
+
+test_x = orig_x[TRAIN_SIZE:]
+test_Y = orig_Y[TRAIN_SIZE:]
 
 
 def func(label_id: int):
